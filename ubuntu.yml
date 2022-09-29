@@ -98,12 +98,12 @@
         git:
           repo: 'https://github.com/tfutils/tfenv'
           dest: /opt/tfenv
-          mode: 0755 
       - name: Creating Symlink to kubectx and kubens 
         become: true
         file:
           src: '/opt/tfenv/bin/{{ item }}'
           dest: '/usr/local/bin/{{ item }}'
+          mode: 0755
           state: link
         with_items:
           - terraform
