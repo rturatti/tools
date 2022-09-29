@@ -95,26 +95,34 @@
     - block:
       - name: Installing TFenv
         become: true
-        unarchive:
-          src: 'https://github.com/tfutils/tfenv/archive/refs/tags/v3.0.0.zip'
-          dest: /usr/local/bin
-          remote_src: yes
-
-    - block:
-      - name: Installing Vault 1.8.1
+        git:
+          repo: 'https://github.com/tfutils/tfenv'
+          dest: /opt/tfenv 
+      - name: Creating Symlink to kubectx and kubens 
         become: true
-        unarchive:
-          src: 'https://releases.hashicorp.com/vault/1.8.1/vault_1.8.1_linux_amd64.zip'
-          dest: /usr/local/bin
-          remote_src: yes
+        file:
+          src: '/opt/tfenv/bin/{{ item }}'
+          dest: '/usr/local/bin/{{ item }}'
+          state: link
+        with_items:
+          - terraform
+          - tfenv
 
-    - block:
-      - name: Installing gomplate 3.9.0
-        become: true
-        get_url:    
-          url: 'https://github.com/hairyhenderson/gomplate/releases/download/v3.9.0/gomplate_linux-amd64'
-          dest: /usr/local/bin/gomplate
-          mode: 755
+    # - block:
+    #   - name: Installing Vault 1.8.1
+    #     become: true
+    #     unarchive:
+    #       src: 'https://releases.hashicorp.com/vault/1.8.1/vault_1.8.1_linux_amd64.zip'
+    #       dest: /usr/local/bin
+    #       remote_src: yes
+
+    # - block:
+    #   - name: Installing gomplate 3.9.0
+    #     become: true
+    #     get_url:    
+    #       url: 'https://github.com/hairyhenderson/gomplate/releases/download/v3.9.0/gomplate_linux-amd64'
+    #       dest: /usr/local/bin/gomplate
+    #       mode: 755
 
     - block:
       - name: Installing Stern 1.11.0
@@ -158,17 +166,17 @@
         become: true
         apt:
           name: code
-      # - name: Install Virtual Studio Code Extensions
-      #   shell:
-      #     cmd: code --install-extension '{{ item }}' 
-      #   loop: 
-      #     - ms-python.python
-      #     - ms-azuretools.vscode-docker
-      #     - bbenoist.vagrant
-      #     - hashicorp.terraform
-      #     - gruntfuggly.todo-tree
-      #     - njpwerner.autodocstring
-      #     - eamodio.gitlens
+      - name: Install Virtual Studio Code Extensions
+        shell:
+          cmd: code --install-extension '{{ item }}' 
+        loop: 
+          - ms-python.python
+          - ms-azuretools.vscode-docker
+          - bbenoist.vagrant
+          - hashicorp.terraform
+          - gruntfuggly.todo-tree
+          - njpwerner.autodocstring
+          - eamodio.gitlens
 
     - block: 
       - name: Install Docker Key
