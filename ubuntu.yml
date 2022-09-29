@@ -97,7 +97,8 @@
         become: true
         git:
           repo: 'https://github.com/tfutils/tfenv'
-          dest: /opt/tfenv 
+          dest: /opt/tfenv
+          mode: 0755 
       - name: Creating Symlink to kubectx and kubens 
         become: true
         file:
